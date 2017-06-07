@@ -1,0 +1,1 @@
+HOLIDAY_API = 'http://tool.bitefu.net/jiari/'

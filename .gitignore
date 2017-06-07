@@ -102,3 +102,4 @@ ENV/
 /.project
 /.pydevproject
 /datas/
+/test.py

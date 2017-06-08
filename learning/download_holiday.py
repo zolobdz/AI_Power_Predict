@@ -16,7 +16,7 @@ def holiday_download():
             conn = urllib.request.urlopen(req)
             holiday_type = conn.read()
             date_record[req_date] = holiday_type
-    with open(os.path.join(helper_path, 'weather'), 'wb') as database:
+    with open(os.path.join(helper_path, 'holiday'), 'wb') as database:
         finall_data = pickle.dumps(date_record)
         database.write(finall_data)
         

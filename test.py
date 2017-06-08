@@ -47,29 +47,30 @@ userIDs = set(userIDs)
 # print(userIDs)
 
 power_features = ['week_day','holiday_type','avg_temp']
-power_labels = ['cost_el']
+# power_labels = ['cost_el']
 
 from collections import defaultdict
 from datetime import datetime, timedelta
 
 el_dict = defaultdict(int)
 base_date = datetime(year=2016, month=9, day=1)
-
+xg = RandomForestRegressor()
 for i in userIDs:
     # print(i)
     currentData = oldData[oldData.user_id == i]
     x_train = currentData[power_features]
-    y_train = currentData[power_labels]
+    y_train = currentData['cost_el']
     x_test  = predictedTempertrueData[power_features]
-    xg = RandomForestRegressor()
     xg.fit(x_train,y_train)
     y_predict = xg.predict(x_test)
+    # print(y_predict)
     for delta, day_el in enumerate(y_predict):
-        el_dict[(base_date+timedelta(days=delta)).strftime('%Y/%m/%d')] += float(day_el)
+        el_dict[(base_date+timedelta(days=delta)).strftime('%Y%m%d')] += float(day_el)
+
     
 with open('Tianchi_power_predict_table.csv', 'w') as new_file:
     lines = ['predict_date, predict_power_consumption\n']
-    data_lines = ['{0}, {1}\n'.format(time_key, total_el) for time_key, total_el in el_dict.items()]
+    data_lines = ['{0}, {1}\n'.format(time_key, int(total_el)) for time_key, total_el in sorted(el_dict.items())]
     new_file.writelines(lines+data_lines)
 
 # print(oldData[oldData.user_id == 1])

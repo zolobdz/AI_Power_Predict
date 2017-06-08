@@ -8,4 +8,6 @@ father_path = os.path.abspath(os.path.dirname(current_path)+os.path.sep+"..")
 data_path = os.path.join(father_path, 'datas')
 '''辅助数据库'''
 helper_path = os.path.join(father_path, 'helper_data')
+'''生成的中间数据库'''
+bridge_path = os.path.join(helper_path, 'temp')
 

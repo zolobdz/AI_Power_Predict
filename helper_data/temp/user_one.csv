@@ -1,3 +1,4 @@
+date_offset,week_day,holiday_type,avg_temp,user_id,cost_el
 0,4,2,2.0,1,1135
 1,5,2,6.5,1,570
 2,6,2,9.5,1,3418

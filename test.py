@@ -20,7 +20,7 @@ oldData = pd.read_csv('./helper_data/temp/all.csv')#所有数据
 
 
 
-from sklearn.ensemble import RandomForestRegressor
+
 #预测9月天气
 # xg = XGBRegressor()
 # xg.fit(x_train,y_train)
@@ -52,30 +52,51 @@ power_features = ['week_day','holiday_type','avg_temp']
 from collections import defaultdict
 from datetime import datetime, timedelta
 
+
+
 el_dict = defaultdict(int)
 base_date = datetime(year=2016, month=9, day=1)
-xg = RandomForestRegressor()
+
+xg = XGBRegressor(learning_rate=0.1,subsample=0.85,
+                        colsample_bytree=0.7,
+                        colsample_bylevel=1,
+                        reg_alpha=0,
+                        reg_lambda=1,
+                        scale_pos_weight=1)
 for i in userIDs:
     # print(i)
     currentData = oldData[oldData.user_id == i]
     x_train = currentData[power_features]
     y_train = currentData['cost_el']
     x_test  = predictedTempertrueData[power_features]
+
     xg.fit(x_train,y_train)
     y_predict = xg.predict(x_test)
     # print(y_predict)
+    # if int(y_predict[0]) < 2:
+    #     print(y_predict)
+    #     print(i)
+    #     print(x_test)
+    #     break
     for delta, day_el in enumerate(y_predict):
         el_dict[(base_date+timedelta(days=delta)).strftime('%Y%m%d')] += float(day_el)
 
     
 with open('Tianchi_power_predict_table.csv', 'w') as new_file:
-    lines = ['predict_date, predict_power_consumption\n']
-    data_lines = ['{0}, {1}\n'.format(time_key, int(total_el)) for time_key, total_el in sorted(el_dict.items())]
+    lines = ['predict_date,predict_power_consumption\n']
+    data_lines = ['{0},{1}\n'.format(time_key, int(total_el)) for time_key, total_el in sorted(el_dict.items())]
     new_file.writelines(lines+data_lines)
 
 # print(oldData[oldData.user_id == 1])
 
 
 
-
+# net = tflearn.input_data(shape=[None, 4])
+#     net = tflearn.fully_connected(net, 28)
+#     net = tflearn.fully_connected(net, 28)
+#     net = tflearn.fully_connected(net, 1, activation='softmax')
+#     net = tflearn.regression(net, optimizer='adam', loss='categorical_crossentropy')
+#     model = tflearn.DNN(net)
+#     model.fit(x_train, y_train, n_epoch=10, batch_size=4, show_metric=True)
+#     y_predict = model.predict(x_test)
 

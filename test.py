@@ -15,7 +15,7 @@ oldData = pd.read_csv('./helper_data/temp/all.csv')#所有数据
 #
 # x_train = oneData[temperture_features]
 # y_train = oneData[temperture_labels]
-
+#
 # x_test = needPredictData[temperture_features]
 
 
@@ -81,7 +81,7 @@ for i in userIDs:
     for delta, day_el in enumerate(y_predict):
         el_dict[(base_date+timedelta(days=delta)).strftime('%Y%m%d')] += float(day_el)
 
-    
+
 with open('Tianchi_power_predict_table.csv', 'w') as new_file:
     lines = ['predict_date,predict_power_consumption\n']
     data_lines = ['{0},{1}\n'.format(time_key, int(total_el)) for time_key, total_el in sorted(el_dict.items())]
@@ -90,13 +90,4 @@ with open('Tianchi_power_predict_table.csv', 'w') as new_file:
 # print(oldData[oldData.user_id == 1])
 
 
-
-# net = tflearn.input_data(shape=[None, 4])
-#     net = tflearn.fully_connected(net, 28)
-#     net = tflearn.fully_connected(net, 28)
-#     net = tflearn.fully_connected(net, 1, activation='softmax')
-#     net = tflearn.regression(net, optimizer='adam', loss='categorical_crossentropy')
-#     model = tflearn.DNN(net)
-#     model.fit(x_train, y_train, n_epoch=10, batch_size=4, show_metric=True)
-#     y_predict = model.predict(x_test)
 

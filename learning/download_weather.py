@@ -2,6 +2,7 @@
 import urllib.request
 import pickle
 import os
+from utils.tool import data_trans
 from setting import WEATHER_API
 from utils.path import helper_path
 from bs4 import BeautifulSoup
@@ -17,34 +18,42 @@ class weatherObj(object):
         self.__dict__['date'] = ''.join(base_date.split('-'))
         return self.__dict__
 
-def __getWeatherMonth():
-    '''取2015年1月到12月，2016年1月到8月的数据'''
-    for month in range(1, 13):
-        new_month = str(month)
-        if len(new_month) == 1:
-            new_month = '0'+new_month
-        yield '2015{0}.html'.format(new_month)
-    for month in range(1, 9):
-        yield '20160{0}.html'.format(str(month))
-
-def weather_download():
-    date_dict = {}
-    for url_month in __getWeatherMonth():
-        url = WEATHER_API + url_month
+class WeatherFactory(object):
+    def __init__(self):
+        self.date_path = os.path.join(helper_path, 'weather')
+        self.fresh_flag = False
+        with open(self.date_path, 'rb') as db_file:
+            self.db = pickle.load(db_file)
+            
+    def __downloadHtml(self, url_date):
+        url = WEATHER_API + url_date + '.html'
         req = urllib.request.Request(url)
         conn = urllib.request.urlopen(req)
-        html = conn.read().decode('gbk')
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(conn.read().decode('gbk'), 'html.parser')
         for tag in soup.find_all('div'):
             if not 'tqtongji2' in tag.get('class', []):
                 continue
             for ul_tag in tag.find_all('ul')[1:]:
-                obj = weatherObj(ul_tag).dump()
-                date_dict[obj['date']] = obj
-    my_file = open(os.path.join(helper_path, 'weather'), 'wb')
-    my_file.write(pickle.dumps(date_dict))
-    my_file.close()
-
-if __name__ == '__main__':
-    weather_download()
+                yield weatherObj(ul_tag)
+                
+    def __freshFlag(self, datetime_obj):
+        url_date = str(datetime_obj.year) + '%02d'%datetime_obj.month
+        print('Download New Weather Data, Request Date is '+ url_date + str(datetime_obj.day))
+        for wea_obj in self.__downloadHtml(url_date):
+            repr_date = wea_obj.dump()
+            self.db[repr_date['date']] = repr_date
     
+    def getWeaByDate(self, datetime_obj):
+        date_str = datetime_obj.strftime('%Y/%m/%d')
+        db_key = data_trans(date_str)
+        if db_key in self.db:
+            return self.db.get(db_key, {})
+        self.__freshFlag(datetime_obj)
+        with open(self.date_path, 'wb') as db_file:
+            db_file.write(pickle.dumps(self.db))
+        return self.db.get(db_key, {})
+    
+try:
+    Weather
+except NameError:
+    Weather = WeatherFactory() 

@@ -68,8 +68,8 @@ for i in userIDs:
         el_dict[(base_date+timedelta(days=delta)).strftime('%Y/%m/%d')] += float(day_el)
     
 with open('Tianchi_power_predict_table.csv', 'w') as new_file:
-    lines = ['predict_date, predict_power_consumption\n']
-    data_lines = ['{0}, {1}\n'.format(time_key, total_el) for time_key, total_el in el_dict.items()]
+    lines = ['predict_date,predict_power_consumption\n']
+    data_lines = ['{0},{1}\n'.format(time_key, total_el) for time_key, total_el in el_dict.items()]
     new_file.writelines(lines+data_lines)
 
 # print(oldData[oldData.user_id == 1])

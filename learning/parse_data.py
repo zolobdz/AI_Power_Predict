@@ -115,10 +115,11 @@ def tenth_month_csv():
         current_line = [date_offset, week_day, holiday_type, '1\n']
 
         all_lines.append(','.join(map(lambda x: str(x), current_line)))
-    with open(os.path.join(bridge_path, 'future.csv'), 'w') as new_f:
+    with open(os.path.join(bridge_path, 'future1.csv'), 'w') as new_f:
         new_f.writelines(all_lines)
 
 if __name__ == '__main__':
     # org_data_to_csv()
-    new_Org_data_to_csv()
+    # new_Org_data_to_csv()
+    ninth_month_csv()
     tenth_month_csv()

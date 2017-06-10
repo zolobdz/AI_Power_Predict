@@ -5,7 +5,7 @@ import pandas as pd
 
 oldData = pd.read_csv('./helper_data/temp/all.csv')#所有数据
 # oneData = pd.read_csv('./helper_data/temp/user_one.csv')#用户1的数据用来预测天气
-# needPredictData = pd.read_csv('./helper_data/temp/future.csv')#预测天气数据
+# needPredictData = pd.read_csv('./helper_data/temp/future1.csv')#预测天气数据
 
 
 
@@ -56,7 +56,7 @@ from datetime import datetime, timedelta
 
 
 el_dict = defaultdict(int)
-base_date = datetime(year=2016, month=9, day=1)
+base_date = datetime(year=2016, month=10, day=1)
 
 # xg = XGBRegressor(learning_rate=0.1,subsample=0.85,
 #                         colsample_bytree=0.7,

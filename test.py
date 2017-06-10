@@ -1,5 +1,6 @@
 #coding='utf-8'
-from xgboost import XGBRegressor
+# from xgboost import
+from sklearn.ensemble import RandomForestRegressor
 import pandas as pd
 
 oldData = pd.read_csv('./helper_data/temp/all.csv')#所有数据
@@ -8,7 +9,7 @@ oldData = pd.read_csv('./helper_data/temp/all.csv')#所有数据
 
 
 
-#组建天气预测数据
+# #组建天气预测数据
 # temperture_features = ['date_offset','week_day','holiday_type']
 # temperture_labels = ['avg_temp']
 #
@@ -21,8 +22,8 @@ oldData = pd.read_csv('./helper_data/temp/all.csv')#所有数据
 
 
 
-#预测9月天气
-# xg = XGBRegressor()
+# #预测9月天气
+# xg = RandomForestRegressor()
 # xg.fit(x_train,y_train)
 # y_predict = xg.predict(x_test)
 #
@@ -57,12 +58,13 @@ from datetime import datetime, timedelta
 el_dict = defaultdict(int)
 base_date = datetime(year=2016, month=9, day=1)
 
-xg = XGBRegressor(learning_rate=0.1,subsample=0.85,
-                        colsample_bytree=0.7,
-                        colsample_bylevel=1,
-                        reg_alpha=0,
-                        reg_lambda=1,
-                        scale_pos_weight=1)
+# xg = XGBRegressor(learning_rate=0.1,subsample=0.85,
+#                         colsample_bytree=0.7,
+#                         colsample_bylevel=1,
+#                         reg_alpha=0,
+#                         reg_lambda=1,
+#                         scale_pos_weight=1)
+xg = RandomForestRegressor()
 for i in userIDs:
     # print(i)
     currentData = oldData[oldData.user_id == i]

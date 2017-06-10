@@ -103,3 +103,4 @@ ENV/
 /.pydevproject
 /datas/
 /test.py
+.idea/

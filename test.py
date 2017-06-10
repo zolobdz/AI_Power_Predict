@@ -41,13 +41,12 @@ oldData = pd.read_csv('./helper_data/temp/all.csv')#所有数据
 
 
 # 读取预测9月天气来训练用电量
-predictedTempertrueData = pd.read_csv('./helper_data/predict/temperaturePredict.csv') #预测后的天气数据 16/9/1-16/9/30
-
+predictedTempertrueData = pd.read_csv('./helper_data/predict/temperaturePredict10.csv') #预测后的天气数据 16/10/1-16/10/31
 userIDs = oldData['user_id']
 userIDs = set(userIDs)
 # print(userIDs)
 
-power_features = ['week_day','holiday_type','avg_temp']
+power_features = ['high_temp','low_temp','date_offset','week_day','holiday_type']
 # power_labels = ['cost_el']
 
 from collections import defaultdict
@@ -64,7 +63,9 @@ base_date = datetime(year=2016, month=10, day=1)
 #                         reg_alpha=0,
 #                         reg_lambda=1,
 #                         scale_pos_weight=1)
+
 xg = RandomForestRegressor()
+
 for i in userIDs:
     # print(i)
     currentData = oldData[oldData.user_id == i]

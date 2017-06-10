@@ -72,8 +72,8 @@ def ninth_month_csv():
 
 def new_Org_data_to_csv():
     weather = load_weather()
-    all_lines = ['date_offset,week_day,holiday_type,avg_temp,user_id,cost_el\n']
-    user_lines = ['date_offset,week_day,holiday_type,avg_temp,user_id,cost_el\n']
+    all_lines = ['date_offset,week_day,holiday_type,high_temp,low_temp,user_id,cost_el\n']
+    user_lines = ['date_offset,week_day,holiday_type,high_temp,low_temp,user_id,cost_el\n']
     with open(os.path.join(data_path, 'Tianchi_power.csv'), 'r') as base_file:
         for lines in base_file.readlines()[1:]:
             date_str, user_id, holiday_type, cost_el = lines.split(',')
@@ -85,9 +85,10 @@ def new_Org_data_to_csv():
             base_date = datetime(year=date_obj.year, month=1, day=1)
             date_offset = int((date_obj - base_date).days)
             week_day = int(date_obj.weekday()) + 1
-            avg_temp = float(int(weather_detial['high']) + int(weather_detial['low'])) / 2
-
-            full_line = [date_offset, week_day, int(holiday_type), avg_temp, user_id, cost_el]
+            # avg_temp = float(int(weather_detial['high']) + int(weather_detial['low'])) / 2
+            high_temp = float(weather_detial['high'])
+            low_temp = float(weather_detial['low'])
+            full_line = [date_offset, week_day, int(holiday_type), high_temp,low_temp, user_id, cost_el]
             if int(user_id) == 1:
                 user_lines.append(','.join(map(lambda x: str(x), full_line)))
             all_lines.append(','.join(map(lambda x: str(x), full_line)))
@@ -120,6 +121,6 @@ def tenth_month_csv():
 
 if __name__ == '__main__':
     # org_data_to_csv()
-    # new_Org_data_to_csv()
-    ninth_month_csv()
-    tenth_month_csv()
+    new_Org_data_to_csv()
+    # ninth_month_csv()
+    # tenth_month_csv()

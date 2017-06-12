@@ -4,7 +4,6 @@ import os, urllib.request, pickle
 from utils.path import data_path
 from utils.path import helper_path
 from utils.tool import data_trans
-import time
 
 
 class HolidayFactory(object):
@@ -48,34 +47,10 @@ def first_holiday_download():
         finall_data = pickle.dumps(date_record)
         database.write(finall_data)
 
-def new_First_holiday_download():
-    '''根据源数据下载日期是否为节假日'''
-    date_record = {}
-    with open(os.path.join(data_path, 'Tianchi_power.csv'), 'r') as base_data:
-        print(data_path)
-        temp = 0
-        for lines in base_data.readlines()[1:]:
-            date_str,_, _, _ = lines.split(',')
-            req_date = data_trans(date_str)
-            req = urllib.request.Request(setting.HOLIDAY_API+'?d='+req_date)
-            reqURL = setting.HOLIDAY_API+'?d='+req_date
-            # print(reqURL)
-            conn = urllib.request.urlopen(req)
-            holiday_type = conn.read()
-            date_record[req_date] = holiday_type
-            print(int(holiday_type))
-            if reqURL == 'http://tool.bitefu.net/jiari/?d=20160930':
-                print('------------END------------')
-                break
-
-    # with open(os.path.join(helper_path, 'holiday'), 'wb') as database:
-    #     finall_data = pickle.dumps(date_record)
-    #     database.write(finall_data)
-
 try:
     Holiday
 except NameError:
     Holiday = HolidayFactory()
 
 if __name__ == '__main__':
-    new_First_holiday_download()
+    first_holiday_download()

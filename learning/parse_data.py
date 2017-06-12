@@ -3,8 +3,8 @@ import os
 import setting
 import urllib.request
 from datetime import datetime, timedelta
-from .download_holiday import Holiday
-from .download_weather import Weather
+from download_holiday import Holiday
+from download_weather import Weather
 from utils.path import data_path
 from utils.path import bridge_path
 from utils.tool import data_trans

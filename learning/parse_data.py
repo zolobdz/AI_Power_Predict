@@ -5,7 +5,6 @@ import urllib.request
 from datetime import datetime, timedelta
 from download_holiday import Holiday
 from download_weather import Weather
-from utils.path import data_path
 from utils.path import bridge_path
 from utils.tool import data_trans
             
@@ -19,7 +18,7 @@ def __getWeatherType(weather_str):
 def org_data_to_csv():
     all_lines = ['date_offset,week_day,holiday_type,high_temp,low_temp,weather_type,user_id,cost_el\n']
     user_lines = ['date_offset,week_day,holiday_type,high_temp,low_temp,weather_type,user_id,cost_el\n']
-    with open(os.path.join(data_path, 'Tianchi_power.csv'), 'r') as base_file:
+    with open(os.path.join(bridge_path, 'My_Bichi.csv'), 'r') as base_file:
         for lines in base_file.readlines()[1:]:
             date_str, user_id, cost_el = lines.split(',')
             db_key, date_obj = data_trans(date_str), datetime.strptime(date_str, '%Y/%m/%d') 

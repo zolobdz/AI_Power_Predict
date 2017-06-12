@@ -87,4 +87,4 @@ def tenth_month_csv():
         new_f.writelines(all_lines)
 
 if __name__ == '__main__':
-    create_holiday_type()
+    org_data_to_csv()

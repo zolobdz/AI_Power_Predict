@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import pickle, os
+import os
 import setting
 import urllib.request
 from datetime import datetime, timedelta
@@ -8,11 +8,17 @@ from download_weather import Weather
 from utils.path import data_path
 from utils.path import bridge_path
 from utils.tool import data_trans
-
+            
+def __getWeatherType(weather_str):
+    if '雪' in weather_str:
+        return 0
+    if '雨' in weather_str:
+        return 1
+    return 2
 
 def org_data_to_csv():
-    all_lines = ['date_offset,week_day,holiday_type,avg_temp,user_id,cost_el\n']
-    user_lines = ['date_offset,week_day,holiday_type,avg_temp,user_id,cost_el\n']
+    all_lines = ['date_offset,week_day,holiday_type,high_temp,low_temp,weather_type,user_id,cost_el\n']
+    user_lines = ['date_offset,week_day,holiday_type,high_temp,low_temp,weather_type,user_id,cost_el\n']
     with open(os.path.join(data_path, 'Tianchi_power.csv'), 'r') as base_file:
         for lines in base_file.readlines()[1:]:
             date_str, user_id, cost_el = lines.split(',')
@@ -24,9 +30,10 @@ def org_data_to_csv():
             base_date = datetime(year=date_obj.year, month=1, day=1)
             date_offset = int((date_obj - base_date).days)
             week_day = int(date_obj.weekday()) + 1
-            avg_temp = float(int(weather_detial['high']) + int(weather_detial['low'])) / 2
-
-            full_line = [date_offset, week_day, int(holiday_type), avg_temp, user_id, cost_el]
+            high_temp = float(weather_detial['high'])
+            low_temp = float(weather_detial['low'])
+            weather_type = __getWeatherType(weather_detial['weather'])
+            full_line = [date_offset, week_day, int(holiday_type), high_temp,low_temp,weather_type,user_id, cost_el]
             if int(user_id) == 1:
                 user_lines.append(','.join(map(lambda x: str(x), full_line)))
             all_lines.append(','.join(map(lambda x: str(x), full_line)))
@@ -58,33 +65,6 @@ def ninth_month_csv():
         new_f.writelines(all_lines)
 
 
-def new_Org_data_to_csv():
-    all_lines = ['date_offset,week_day,holiday_type,high_temp,low_temp,user_id,cost_el\n']
-    user_lines = ['date_offset,week_day,holiday_type,high_temp,low_temp,user_id,cost_el\n']
-    with open(os.path.join(data_path, 'Tianchi_power.csv'), 'r') as base_file:
-        for lines in base_file.readlines()[1:]:
-            date_str, user_id, holiday_type, cost_el = lines.split(',')
-            db_key = data_trans(date_str)
-            date_obj = datetime.strptime(date_str, '%Y/%m/%d')
-            weather_detial = Weather.getWeaByDate(date_obj)
-            if (weather_detial is None):
-                raise Exception('辅助数据库数据缺失，请补全数据后再重新生成文件，缺失日期:', db_key)
-            base_date = datetime(year=date_obj.year, month=1, day=1)
-            date_offset = int((date_obj - base_date).days)
-            week_day = int(date_obj.weekday()) + 1
-            # avg_temp = float(int(weather_detial['high']) + int(weather_detial['low'])) / 2
-            high_temp = float(weather_detial['high'])
-            low_temp = float(weather_detial['low'])
-            full_line = [date_offset, week_day, int(holiday_type), high_temp,low_temp, user_id, cost_el]
-            if int(user_id) == 1:
-                user_lines.append(','.join(map(lambda x: str(x), full_line)))
-            all_lines.append(','.join(map(lambda x: str(x), full_line)))
-    with open(os.path.join(bridge_path, 'all.csv'), 'w') as f_one:
-        f_one.writelines(all_lines)
-    with open(os.path.join(bridge_path, 'user_one.csv'), 'w') as f_two:
-        f_two.writelines(user_lines)
-
-
 def tenth_month_csv():
     finish_date = datetime(year=2016, month=11, day=1)
     start_date = datetime(year=2016, month=10, day=1)
@@ -107,4 +87,4 @@ def tenth_month_csv():
         new_f.writelines(all_lines)
 
 if __name__ == '__main__':
-    new_Org_data_to_csv()
+    create_holiday_type()

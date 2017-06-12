@@ -37,6 +37,7 @@ class WeatherFactory(object):
                 yield weatherObj(ul_tag)
                 
     def __freshFlag(self, datetime_obj):
+        print(datetime_obj.month)
         url_date = str(datetime_obj.year) + '%02d'%datetime_obj.month
         print('Download New Weather Data, Request Date is '+ url_date + str(datetime_obj.day))
         for wea_obj in self.__downloadHtml(url_date):
